@@ -55,14 +55,42 @@ void WordBag::sortWordList() {
 }
 
 void WordBag::removeChars() {
-    std::string charsToRemove = "\'\"!.,?";
+    std::string charsToRemove = "\'\"!.,?()*$/-@:;&1234567890";
     for (int i = 0; i < this->words.size(); i++) {
         for (char c : charsToRemove) {
             words[i].erase(std::remove(words[i].begin(), words[i].end(), c), words[i].end());
+        }
+        if(this->words[i].length() == 0) {
+            this->words.erase(this->words.begin() + i--);
+        }
+    }
+}
+
+void WordBag::wordsToLower() {
+    for(int i = 0; i < this->words.size(); i++)
+    {
+        for(int j = 0; j < this->words[i].length(); j++) {
+            this->words[i][j] = std::tolower(this->words[i][j]);   
         }
     }
 }
 
 int WordBag::getSentiment() {
     return this->sentiment;
+}
+
+int WordBag::getWordCount() {
+    return this->words.size();
+}
+
+bool WordBag::contains(std::string Word) {
+    bool res = false;
+    for(auto word : this->words) {
+        if(word == Word) res = true;
+    }
+    return res;
+}
+
+std::vector<std::string>& WordBag::getWordList(){
+    return this->words;
 }

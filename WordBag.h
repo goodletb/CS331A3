@@ -32,7 +32,11 @@ public:
     void printWords();
     void sortWordList();
     void removeChars();
+    void wordsToLower();
     int getSentiment();
+    int getWordCount();
+    bool contains(std::string Word);
+    std::vector<std::string>& getWordList();
     
 private:
     std::string originalString;
