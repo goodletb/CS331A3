@@ -14,11 +14,10 @@
 #include <cstdlib>
 #include <iostream>
 #include "WordBag.h"
+#include "NaiveBayesClassifier.h"
 #include <fstream>
 #include <vector>
 #include <map>
-
-using namespace std;
 
 /*
  *
@@ -36,7 +35,7 @@ int main(int argc, char** argv) {
         bags.push_back(temp);
     }
     
-    std::map<std::string, std::pair<int, int>> vocabulary;
+    std::map<std::string, std::pair<int, int> > vocabulary;
     
     for(auto bag : bags){
         for(auto word : bag.getWordList())
@@ -85,6 +84,9 @@ int main(int argc, char** argv) {
         }
         outfile << bags[i].getSentiment() << "\n\n";
     }
+    
+    NaiveBayesClassifier classifier(vocabulary);
+    
     
     std::cout << " WORKING\n";
     return 0;
