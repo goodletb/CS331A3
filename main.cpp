@@ -22,9 +22,21 @@
 /*
  *
  */
-int main(int argc, char** argv) {
+std::string classifyTrainingData(NaiveBayesClassifier classifier, std::vector<WordBag> bags, std::string outputString) {
+    int correct = 0;
+    for(auto bag : bags) {
+        bool res = classifier.predictSentence(bag);
+        if(res == true && bag.getSentiment() == 1 || res == false && bag.getSentiment() == 0) {
+            correct++;
+        }
+    }
+    float accuracy = (float)correct / (float)bags.size();
+    return outputString + std::to_string(accuracy) + "\n";
+}
+
+std::vector<WordBag> readFromFile(std::string filename) {
     std::ifstream f;
-    f.open("input.txt");
+    f.open(filename);
     std::string line;
     std::vector<WordBag> bags;
     while (!f.eof()) {
@@ -35,7 +47,12 @@ int main(int argc, char** argv) {
         temp.removeDuplicates();
         bags.push_back(temp);
     }
-    
+    f.close();
+    return bags;
+}
+
+int main(int argc, char** argv) {
+    auto bags = readFromFile("input.txt");  
     std::map<std::string, std::pair<int, int> > vocabulary;
     
     for(auto bag : bags){
@@ -98,7 +115,20 @@ int main(int argc, char** argv) {
     NaiveBayesClassifier classifier(vocabulary, pCount, tCount);
     classifier.TrainClassifier();
     
+    std::string result1 = classifyTrainingData(classifier, bags, "Classified training data at accuracy: ");
+    
+    auto testBags = readFromFile("testSet.txt");
+    
+    std::string result2 = classifyTrainingData(classifier, testBags, "Classified test data at accuracy: ");
+    
+    std::ofstream results("results.txt");
+    results << result1 << "\n" << result2 << "\n";
+    results.close();
+    
+    
+    
     std::cout << " WORKING\n";
     return 0;
 }
+
 

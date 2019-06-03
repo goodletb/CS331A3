@@ -27,11 +27,9 @@ public:
     virtual ~NaiveBayesClassifier();
     
     void TrainClassifier();
-    bool predictSentence(std::vector<bool> data);
+    bool predictSentence(WordBag predict);
 private:
     std::map<std::string, std::pair<int, int> > vocabulary;
-    std::vector<std::vector<bool> > data;
-    
     int pSentenceCount;
     int tSentenceCount;
     

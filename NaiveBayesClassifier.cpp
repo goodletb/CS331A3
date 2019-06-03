@@ -19,6 +19,7 @@ NaiveBayesClassifier::NaiveBayesClassifier(const NaiveBayesClassifier& orig) {
     this->vocabulary = orig.vocabulary;
     this->pSentenceCount = orig.pSentenceCount;
     this->tSentenceCount = orig.tSentenceCount;
+    this->probDistribution = orig.probDistribution;
 }
 
 NaiveBayesClassifier::NaiveBayesClassifier(std::map<std::string, std::pair<int, int> > vocab, int pCount, int tCount) {
@@ -42,10 +43,25 @@ void NaiveBayesClassifier::TrainClassifier() {
         probs[1] = (nEx + 1) / (this->tSentenceCount - this->pSentenceCount + 2);
         probs[2] = (pNex + 1) / (this->pSentenceCount + 2);
         probs[3] = (pEx + 1) / (this->pSentenceCount + 2);
-        this->probDistribution[word->first] = probs;
+        std::pair<std::string, std::vector<float> > keyval;
+        keyval.first = word->first;
+        keyval.second = probs;
+        this->probDistribution.insert(keyval);
     }
 }
 
-bool NaiveBayesClassifier::predictSentence(std::vector<bool> data) {
-    return true;
+bool NaiveBayesClassifier::predictSentence(WordBag bag) {
+    float posChance = std::log(float((float)this->pSentenceCount / (float)this->tSentenceCount));
+    float negChance = std::log((float)((float)this->tSentenceCount - (float)this->pSentenceCount) / (float)this->tSentenceCount);
+    for(auto word = this->vocabulary.begin(); word != this->vocabulary.end(); ++word) {
+        if(bag.contains(word->first)) {
+            posChance += std::log(this->probDistribution[word->first][3]);
+            negChance += std::log(this->probDistribution[word->first][1]);
+        }
+        else {
+            posChance += std::log(this->probDistribution[word->first][2]);
+            negChance += std::log(this->probDistribution[word->first][0]);
+        }
+    }
+    return posChance > negChance ? true : false;
 }
