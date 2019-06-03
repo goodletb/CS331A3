@@ -33,6 +33,7 @@ public:
     void sortWordList();
     void removeChars();
     void wordsToLower();
+    void removeDuplicates();
     int getSentiment();
     int getWordCount();
     bool contains(std::string Word);

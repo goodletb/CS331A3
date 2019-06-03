@@ -15,18 +15,50 @@
 #define NAIVEBAYESCLASSIFIER_H
 
 #include<map>
+#include "WordBag.h"
+#include <cmath>
 
 class NaiveBayesClassifier {
 public:
     
     NaiveBayesClassifier();
     NaiveBayesClassifier(const NaiveBayesClassifier& orig);
-    NaiveBayesClassifier(std::map<std::string, std::pair<int, int> > vocabulary);
+    NaiveBayesClassifier(std::map<std::string, std::pair<int, int> > vocabulary, int pCount, int tCount);
     virtual ~NaiveBayesClassifier();
     
+    void TrainClassifier();
+    bool predictSentence(std::vector<bool> data);
 private:
     std::map<std::string, std::pair<int, int> > vocabulary;
+    std::vector<std::vector<bool> > data;
+    
+    int pSentenceCount;
+    int tSentenceCount;
+    
+    std::map<std::string, std::vector<float> > probDistribution;
 };
 
 #endif /* NAIVEBAYESCLASSIFIER_H */
-
+//
+//if(bag.getSentiment() == 1)
+//            {
+//                if(bag.contains(word->first))
+//                {
+//                    pEx++;
+//                }
+//                else
+//                {
+//                    pNex++;
+//                }
+//            }
+//            else
+//            {
+//                if(bag.contains(word->first))
+//                {
+//                    nEx++;
+//                }
+//                else
+//                {
+//                    nNex++;
+//                }
+//            }

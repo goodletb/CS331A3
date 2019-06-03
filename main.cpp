@@ -32,6 +32,7 @@ int main(int argc, char** argv) {
         WordBag temp(line);
         temp.removeChars();
         temp.wordsToLower();
+        temp.removeDuplicates();
         bags.push_back(temp);
     }
     
@@ -84,9 +85,18 @@ int main(int argc, char** argv) {
         }
         outfile << bags[i].getSentiment() << "\n\n";
     }
+    int pCount = 0;
+    int tCount = 0;
     
-    NaiveBayesClassifier classifier(vocabulary);
+    for(auto bag : bags) {
+        if(bag.getSentiment() == 1) {
+            pCount++;
+        }
+        tCount++;
+    }
     
+    NaiveBayesClassifier classifier(vocabulary, pCount, tCount);
+    classifier.TrainClassifier();
     
     std::cout << " WORKING\n";
     return 0;

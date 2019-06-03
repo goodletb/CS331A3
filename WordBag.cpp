@@ -75,6 +75,11 @@ void WordBag::wordsToLower() {
     }
 }
 
+void WordBag::removeDuplicates() {
+    sort( this->words.begin(), this->words.end() );
+    this->words.erase( unique( this->words.begin(), this->words.end() ), this->words.end() );
+}
+
 int WordBag::getSentiment() {
     return this->sentiment;
 }
